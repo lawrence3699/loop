@@ -1,5 +1,5 @@
 import { readFileSync, writeFileSync, readdirSync, existsSync, mkdirSync } from "node:fs";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import matter from "gray-matter";
 
 // ── Interfaces ──────────────────────────────────────
@@ -109,6 +109,11 @@ export async function addDecision(
   const slug = slugify(decision.title);
   const filename = `${padId(id)}-${slug}.md`;
   const filePath = join(dir, filename);
+
+  // Path traversal guard: ensure file stays within decisions dir
+  if (!resolve(filePath).startsWith(resolve(dir))) {
+    throw new Error("Invalid decision title: path traversal detected");
+  }
 
   const content =
     `---\n` +

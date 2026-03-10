@@ -48,7 +48,10 @@ export class TmuxAdapter implements TerminalAdapter {
     args: string[],
     opts: AdapterLaunchOptions,
   ): Promise<LaunchedProcess> {
-    const fullCommand = [command, ...args].join(" ");
+    // Shell-quote each argument to prevent injection when tmux interprets
+    // the command string via the shell.
+    const shellQuote = (s: string): string => "'" + s.replace(/'/g, "'\\''") + "'";
+    const fullCommand = [command, ...args].map(shellQuote).join(" ");
 
     // Split a new pane and run the command.  tmux split-window returns the
     // pane ID (e.g. %5) when using -P -F.

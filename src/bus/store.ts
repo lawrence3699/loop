@@ -203,7 +203,8 @@ export class BusStore {
  * Replaces ":" with "_" so it can be used in file paths.
  */
 export function subscriberToSafeName(subscriberId: string): string {
-  return subscriberId.replace(/:/g, "_");
+  // Strip path separators and traversal sequences to prevent directory escape
+  return subscriberId.replace(/:/g, "_").replace(/[/\\]/g, "").replace(/\.\./g, "");
 }
 
 /**

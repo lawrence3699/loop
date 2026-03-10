@@ -162,6 +162,16 @@ export class OrchestratorDaemon {
    * Handle an incoming IPC request.
    */
   async handleRequest(req: IpcRequest): Promise<IpcResponse> {
+    // Validate incoming request structure
+    if (!req || typeof req !== "object" || typeof req.type !== "string") {
+      return { success: false, type: "ERROR", error: "Invalid request: missing type" };
+    }
+    if (req.data !== undefined && (typeof req.data !== "object" || req.data === null)) {
+      return { success: false, type: "ERROR", error: "Invalid request: data must be an object" };
+    }
+    // Ensure data is always an object for safe property access
+    if (!req.data) req.data = {};
+
     try {
       switch (req.type) {
         case "STATUS": {

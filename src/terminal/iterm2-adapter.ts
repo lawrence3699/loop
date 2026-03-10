@@ -49,11 +49,13 @@ export class ITerm2Adapter implements TerminalAdapter {
     args: string[],
     opts: AdapterLaunchOptions,
   ): Promise<LaunchedProcess> {
-    const escaped = [command, ...args]
-      .map((a) => a.replace(/\\/g, "\\\\").replace(/"/g, '\\"'))
-      .join(" ");
+    // Sanitize for AppleScript: escape backslashes, quotes, AND newlines
+    // to prevent AppleScript injection via crafted arguments.
+    const escapeAS = (s: string): string =>
+      s.replace(/\\/g, "\\\\").replace(/"/g, '\\"').replace(/\n/g, "").replace(/\r/g, "");
 
-    const cwd = opts.cwd.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+    const escaped = [command, ...args].map(escapeAS).join(" ");
+    const cwd = escapeAS(opts.cwd);
 
     // Create a new iTerm2 tab and run the command there.
     const script = `
@@ -122,7 +124,7 @@ export class ITerm2Adapter implements TerminalAdapter {
   }
 
   async inject(processOrId: number | string, command: string): Promise<void> {
-    const escaped = command.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+    const escaped = command.replace(/\\/g, "\\\\").replace(/"/g, '\\"').replace(/\n/g, "").replace(/\r/g, "");
     // Write text to the current iTerm2 session
     const script = `
       tell application "iTerm2"
