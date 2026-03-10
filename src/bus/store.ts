@@ -32,6 +32,7 @@ export class BusStore {
   readonly seqCounterPath: string;
   readonly seqLockPath: string;
   readonly runDir: string;
+  private _eventCount = 0;
 
   constructor(busDir: string) {
     this.busDir = busDir;
@@ -70,6 +71,9 @@ export class BusStore {
       };
       await safeWriteFile(this.agentsFile, JSON.stringify(initial, null, 2) + "\n");
     }
+
+    // Initialize event count cache from disk
+    this._eventCount = await this._countEventsFromDisk();
   }
 
   /**
@@ -79,6 +83,7 @@ export class BusStore {
     const date = event.timestamp.slice(0, 10); // YYYY-MM-DD
     const filePath = join(this.eventsDir, `${date}.jsonl`);
     await appendJsonl(filePath, event);
+    this._eventCount++;
   }
 
   /**
@@ -171,8 +176,18 @@ export class BusStore {
 
   /**
    * Count total events across all event log files.
+   * Uses a cached counter when available (warm path).
    */
   async countEvents(): Promise<number> {
+    if (this._eventCount > 0) return this._eventCount;
+    this._eventCount = await this._countEventsFromDisk();
+    return this._eventCount;
+  }
+
+  /**
+   * Scan all event log files on disk and return the total event count.
+   */
+  private async _countEventsFromDisk(): Promise<number> {
     const { readdir, readFile } = await import("node:fs/promises");
     let total = 0;
     try {

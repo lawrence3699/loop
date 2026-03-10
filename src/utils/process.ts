@@ -1,5 +1,5 @@
 import { spawn } from "node:child_process";
-import { readFileSync, writeFileSync, unlinkSync, openSync } from "node:fs";
+import { readFileSync, writeFileSync, unlinkSync, openSync, closeSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { mkdirSync } from "node:fs";
 
@@ -67,6 +67,7 @@ export function daemonize(script: string, args: string[], logPath: string): numb
   });
 
   child.unref();
+  closeSync(logFd);
 
   const pid = child.pid;
   if (pid === undefined) {

@@ -48,27 +48,30 @@ const NO_OP_PLAN: SharedPlanModule = {
 };
 
 // Lazy-loaded promise — awaited before first use in runLoop()
-let _planModule: SharedPlanModule | null = null;
+let _planModulePromise: Promise<SharedPlanModule> | null = null;
 
 async function loadPlanModule(): Promise<SharedPlanModule> {
-  if (_planModule) return _planModule;
-  try {
-    const planPath = ["../plan", "shared-plan.js"].join("/");
-    const mod = (await import(planPath)) as Record<string, unknown>;
-    _planModule = {
-      initSharedPlan: typeof mod.initSharedPlan === "function"
-        ? mod.initSharedPlan as SharedPlanModule["initSharedPlan"] : NO_OP_PLAN.initSharedPlan,
-      updateSharedPlan: typeof mod.updateSharedPlan === "function"
-        ? mod.updateSharedPlan as SharedPlanModule["updateSharedPlan"] : NO_OP_PLAN.updateSharedPlan,
-      getExecutorContext: typeof mod.getExecutorContext === "function"
-        ? mod.getExecutorContext as SharedPlanModule["getExecutorContext"] : NO_OP_PLAN.getExecutorContext,
-      getReviewerContext: typeof mod.getReviewerContext === "function"
-        ? mod.getReviewerContext as SharedPlanModule["getReviewerContext"] : NO_OP_PLAN.getReviewerContext,
-    };
-  } catch {
-    _planModule = NO_OP_PLAN;
+  if (!_planModulePromise) {
+    _planModulePromise = (async () => {
+      try {
+        const planPath = ["../plan", "shared-plan.js"].join("/");
+        const mod = (await import(planPath)) as Record<string, unknown>;
+        return {
+          initSharedPlan: typeof mod.initSharedPlan === "function"
+            ? mod.initSharedPlan as SharedPlanModule["initSharedPlan"] : NO_OP_PLAN.initSharedPlan,
+          updateSharedPlan: typeof mod.updateSharedPlan === "function"
+            ? mod.updateSharedPlan as SharedPlanModule["updateSharedPlan"] : NO_OP_PLAN.updateSharedPlan,
+          getExecutorContext: typeof mod.getExecutorContext === "function"
+            ? mod.getExecutorContext as SharedPlanModule["getExecutorContext"] : NO_OP_PLAN.getExecutorContext,
+          getReviewerContext: typeof mod.getReviewerContext === "function"
+            ? mod.getReviewerContext as SharedPlanModule["getReviewerContext"] : NO_OP_PLAN.getReviewerContext,
+        };
+      } catch {
+        return NO_OP_PLAN;
+      }
+    })();
   }
-  return _planModule;
+  return _planModulePromise;
 }
 
 // ── Public types ─────────────────────────────────────

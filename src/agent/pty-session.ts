@@ -81,6 +81,7 @@ export class PtySession extends EventEmitter {
 
   // Transcript (accumulated meaningful content lines)
   private _contentLines: string[] = [];
+  private _contentBytes = 0;
 
   // -- JSONL logger (optional, enabled via enableLogging) -------------------
   private _logger: fs.WriteStream | null = null;
@@ -348,6 +349,11 @@ export class PtySession extends EventEmitter {
               if (norm !== lastNorm) {
                 this._lastEmittedContent = contentText;
                 this._contentLines.push(contentText);
+                this._contentBytes += Buffer.byteLength(contentText);
+                while (this._contentBytes > MAX_TRANSCRIPT_BYTES && this._contentLines.length > 1) {
+                  const dropped = this._contentLines.shift()!;
+                  this._contentBytes -= Buffer.byteLength(dropped);
+                }
                 this.emit("content", contentText);
               }
             }
