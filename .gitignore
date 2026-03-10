@@ -4,3 +4,8 @@ dist/
 .loop/
 coverage/
 .DS_Store
+.env*
+*.log
+*.pid
+*.sock
+*.tgz

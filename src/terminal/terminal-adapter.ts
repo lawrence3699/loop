@@ -50,10 +50,10 @@ export class NativeTerminalAdapter implements TerminalAdapter {
   ): Promise<LaunchedProcess> {
     // Build full shell command string (escaped for AppleScript)
     const escaped = [command, ...args]
-      .map((a) => a.replace(/'/g, "'\\''"))
+      .map((a) => a.replace(/\\/g, "\\\\").replace(/"/g, '\\"').replace(/'/g, "'\\''"))
       .join(" ");
 
-    const cwd = opts.cwd.replace(/'/g, "'\\''");
+    const cwd = opts.cwd.replace(/\\/g, "\\\\").replace(/"/g, '\\"').replace(/'/g, "'\\''");
 
     // Use osascript to open a new Terminal window and run the command
     const script = `

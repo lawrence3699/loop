@@ -5,6 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>loop — Iterative Multi-Engine AI Orchestration</title>
   <meta name="description" content="Combine Claude, Gemini, and Codex in a quality-scored iteration loop. File-based event bus. Multi-agent orchestration. Zero external dependencies.">
+  <meta property="og:title" content="loop — Iterative Multi-Engine AI Orchestration">
+  <meta property="og:description" content="Combine Claude, Gemini, and Codex in quality-scored iteration loops. File-based event bus. Multi-agent orchestration.">
+  <meta property="og:url" content="https://github.com/nicepkg/loop">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://opengraph.githubassets.com/1/nicepkg/loop">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="loop — Iterative Multi-Engine AI Orchestration">
+  <meta name="twitter:description" content="Combine Claude, Gemini, and Codex in quality-scored iteration loops.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -25,7 +33,7 @@
 
       --text-primary: #e0e0e0;
       --text-secondary: #888888;
-      --text-dim: #555555;
+      --text-dim: #777777;
 
       --orange: #F07623;
       --blue: #4285F4;
@@ -161,6 +169,18 @@
       transition: opacity 0.2s;
     }
     .nav-cta:hover { opacity: 0.9; color: #fff; }
+
+    .nav-toggle {
+      display: none;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text-primary);
+      font-size: 20px;
+      padding: 4px 10px;
+      cursor: pointer;
+      font-family: 'JetBrains Mono', monospace;
+    }
 
     /* ============================================
        Hero Section
@@ -726,7 +746,21 @@
 
     @media (max-width: 768px) {
       .header-content { padding: 0 20px; }
-      .nav-link { display: none; }
+      .nav-toggle { display: block; }
+      .nav {
+        display: none;
+        position: absolute;
+        top: 64px;
+        left: 0;
+        right: 0;
+        background: rgba(10, 10, 10, 0.98);
+        border-bottom: 1px solid var(--border);
+        flex-direction: column;
+        padding: 20px;
+        gap: 16px;
+      }
+      .nav.open { display: flex; }
+      .nav-link { display: block !important; font-size: 15px; }
 
       .hero { padding: 120px 20px 60px; }
       .hero-title { font-size: 56px; }
@@ -767,12 +801,13 @@
         <span class="logo-icon">&infin;</span>
         <span class="logo-text">LOOP</span>
       </a>
-      <nav class="nav">
+      <button class="nav-toggle" id="navToggle" aria-label="Menu">&#9776;</button>
+      <nav class="nav" id="mainNav">
         <a href="#how-it-works" class="nav-link">How It Works</a>
         <a href="#features" class="nav-link">Features</a>
         <a href="#quick-start" class="nav-link">Quick Start</a>
         <a href="#architecture" class="nav-link">Architecture</a>
-        <a href="https://github.com/user/loop-cli" class="nav-cta">GitHub &rarr;</a>
+        <a href="https://github.com/nicepkg/loop" class="nav-cta">GitHub &rarr;</a>
       </nav>
     </div>
   </header>
@@ -804,7 +839,7 @@
       </div>
 
       <div class="hero-cta">
-        <a href="https://github.com/user/loop-cli" class="btn btn-primary">View on GitHub &rarr;</a>
+        <a href="https://github.com/nicepkg/loop" class="btn btn-primary">View on GitHub &rarr;</a>
         <a href="#quick-start" class="btn btn-secondary">Quick Start</a>
       </div>
     </div>
@@ -1065,7 +1100,7 @@
       </div>
 
       <div class="footer-links">
-        <a href="https://github.com/user/loop-cli">GitHub</a>
+        <a href="https://github.com/nicepkg/loop">GitHub</a>
         <span class="sep">|</span>
         <span>v0.1.0</span>
         <span class="sep">|</span>
@@ -1105,6 +1140,17 @@
           this.classList.remove('copied');
           hint.textContent = 'click to copy';
         }, 2000);
+      });
+    });
+
+    // Mobile nav toggle
+    document.getElementById('navToggle').addEventListener('click', function() {
+      document.getElementById('mainNav').classList.toggle('open');
+    });
+    // Close mobile nav on link click
+    document.querySelectorAll('#mainNav .nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        document.getElementById('mainNav').classList.remove('open');
       });
     });
 

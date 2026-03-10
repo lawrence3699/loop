@@ -23,10 +23,12 @@
     "node": ">=18"
   },
   "files": [
-    "dist/",
+    "dist/**/*.js",
+    "dist/**/*.d.ts",
     "skills/",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "CHANGELOG.md"
   ],
   "keywords": [
     "cli",
@@ -39,7 +41,16 @@
     "iteration",
     "loop"
   ],
+  "author": "loop-cli contributors",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nicepkg/loop.git"
+  },
+  "homepage": "https://github.com/nicepkg/loop",
+  "bugs": {
+    "url": "https://github.com/nicepkg/loop/issues"
+  },
   "dependencies": {
     "@clack/prompts": "^0.10.0",
     "blessed": "^0.1.81",

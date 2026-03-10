@@ -266,17 +266,20 @@ export class AgentLauncher {
       ptySession.destroy();
     };
 
-    // 12. Signal handlers
+    // 12. Signal handlers (stored for cleanup to prevent accumulation)
     let signalHandled = false;
     const handleSignal = (signal: string) => {
       if (signalHandled) return;
       signalHandled = true;
-      // Use conventional exit codes for signals
       const code = signal === "SIGTERM" ? 143 : 130;
+      process.removeListener("SIGTERM", onSigterm);
+      process.removeListener("SIGINT", onSigint);
       cleanup().finally(() => process.exit(code));
     };
-    process.on("SIGTERM", () => handleSignal("SIGTERM"));
-    process.on("SIGINT", () => handleSignal("SIGINT"));
+    const onSigterm = () => handleSignal("SIGTERM");
+    const onSigint = () => handleSignal("SIGINT");
+    process.on("SIGTERM", onSigterm);
+    process.on("SIGINT", onSigint);
 
     return {
       subscriberId,

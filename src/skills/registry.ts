@@ -32,6 +32,11 @@ export class SkillRegistry {
     scope: "global" | "project",
     cwd?: string,
   ): Promise<void> {
+    // Prevent path traversal
+    if (/[/\\]|^\.\.?$/.test(name) || name.includes("..")) {
+      throw new Error(`Invalid skill name: ${name}`);
+    }
+
     let baseDir: string;
 
     if (scope === "global") {

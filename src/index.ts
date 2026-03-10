@@ -10,12 +10,10 @@ import { interactive } from "./ui/interactive.js";
 import { showPlan, clearPlan } from "./plan/shared-plan.js";
 import { addDecision, listDecisions, resolveDecision } from "./plan/decisions.js";
 import { SkillRegistry } from "./skills/registry.js";
-
-// These imports reference modules from other agents — they'll exist when merged
-// import { runLoop } from "./core/loop.js";
-// import { EventBus } from "./bus/event-bus.js";
-// import { launchAgent } from "./agent/launcher.js";
-// import { DaemonManager } from "./orchestrator/daemon.js";
+import { runLoop } from "./core/loop.js";
+import { createEngine } from "./core/engine.js";
+import { EventBus } from "./bus/event-bus.js";
+import { OrchestratorDaemon } from "./orchestrator/daemon.js";
 
 const program = new Command();
 
@@ -54,29 +52,23 @@ program
           const interactiveConfig = await interactive();
           if (!interactiveConfig) process.exit(0);
 
+          const execName = interactiveConfig.executor as EngineName;
+          const revName = interactiveConfig.reviewer as EngineName;
+
           console.log(bold("\n  Preflight check...\n"));
-          await preflight(
-            interactiveConfig.executor as EngineName,
-            interactiveConfig.reviewer as EngineName,
-          );
+          await preflight(execName, revName);
 
-          // When core/loop.ts is merged:
-          // await runLoop({
-          //   task: interactiveConfig.task,
-          //   maxIterations: interactiveConfig.iterations,
-          //   threshold: interactiveConfig.threshold,
-          //   executor: interactiveConfig.executor,
-          //   reviewer: interactiveConfig.reviewer,
-          //   cwd: interactiveConfig.dir,
-          //   verbose: interactiveConfig.verbose,
-          //   mode: interactiveConfig.mode,
-          //   passthroughArgs: interactiveConfig.passthroughArgs,
-          // });
-
-          console.log(
-            bold("\n  Ready to launch loop"),
-            `(waiting for core/loop.ts integration)\n`,
-          );
+          await runLoop({
+            task: interactiveConfig.task,
+            maxIterations: interactiveConfig.iterations,
+            threshold: interactiveConfig.threshold,
+            executor: createEngine(execName),
+            reviewer: createEngine(revName),
+            cwd: interactiveConfig.dir,
+            verbose: interactiveConfig.verbose,
+            mode: { current: interactiveConfig.mode as "auto" | "manual" },
+            passthroughArgs: interactiveConfig.passthroughArgs,
+          });
         } else {
           // Command-line mode
           const executorName = (options.executor ?? config.defaultExecutor) as EngineName;
@@ -143,23 +135,17 @@ program
             `  Mode:        ${modeValue === "auto" ? "\u23F5\u23F5 Auto" : "\u23F5\u23F5 Manual"}`,
           );
 
-          // When core/loop.ts is merged:
-          // await runLoop({
-          //   task,
-          //   maxIterations: iterations,
-          //   threshold,
-          //   executor: executorName,
-          //   reviewer: reviewerName,
-          //   cwd,
-          //   verbose: options.verbose ?? false,
-          //   mode: modeValue,
-          //   passthroughArgs: options.pass,
-          // });
-
-          console.log(
-            bold("\n  Ready to launch loop"),
-            `(waiting for core/loop.ts integration)\n`,
-          );
+          await runLoop({
+            task,
+            maxIterations: iterations,
+            threshold,
+            executor: createEngine(executorName),
+            reviewer: createEngine(reviewerName),
+            cwd,
+            verbose: options.verbose ?? false,
+            mode: { current: modeValue as "auto" | "manual" },
+            passthroughArgs: options.pass,
+          });
         }
       } catch (err: unknown) {
         const msg = err instanceof Error ? err.message : String(err);
@@ -177,27 +163,61 @@ daemon
   .command("start")
   .description("Start the loop daemon")
   .action(async () => {
-    // import { DaemonManager } from "./orchestrator/daemon.js";
-    // const mgr = new DaemonManager();
-    // await mgr.start();
-    console.log(bold("  Starting daemon..."));
-    console.log("  (waiting for orchestrator/daemon.ts integration)");
+    try {
+      const cwd = process.cwd();
+      const mgr = new OrchestratorDaemon(cwd);
+      console.log(bold("  Starting daemon..."));
+      await mgr.start();
+      console.log(green("  Daemon started (pid=" + process.pid + ")"));
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      console.error(red(`  Error: ${msg}`));
+      process.exit(1);
+    }
   });
 
 daemon
   .command("stop")
   .description("Stop the loop daemon")
   .action(async () => {
-    console.log(bold("  Stopping daemon..."));
-    console.log("  (waiting for orchestrator/daemon.ts integration)");
+    try {
+      const cwd = process.cwd();
+      const mgr = new OrchestratorDaemon(cwd);
+      if (!mgr.isRunning()) {
+        console.log(yellow("  Daemon is not running."));
+        return;
+      }
+      await mgr.stop();
+      console.log(green("  Daemon stopped."));
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      console.error(red(`  Error: ${msg}`));
+      process.exit(1);
+    }
   });
 
 daemon
   .command("status")
   .description("Show daemon status")
   .action(async () => {
-    console.log(bold("  Daemon status:"));
-    console.log("  (waiting for orchestrator/daemon.ts integration)");
+    try {
+      const cwd = process.cwd();
+      const mgr = new OrchestratorDaemon(cwd);
+      if (!mgr.isRunning()) {
+        console.log(yellow("  Daemon is not running."));
+        return;
+      }
+      const status = await mgr.getStatus();
+      console.log(bold("  Daemon status:"));
+      console.log(`  PID:       ${status.pid}`);
+      console.log(`  Uptime:    ${status.uptime}s`);
+      console.log(`  Agents:    ${status.agents}`);
+      console.log(`  Events:    ${status.busEvents}`);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      console.error(red(`  Error: ${msg}`));
+      process.exit(1);
+    }
   });
 
 // ── Subcommand: bus ─────────────────────────────────
@@ -207,28 +227,72 @@ const bus = program.command("bus").description("Event bus operations");
 bus
   .command("send <message>")
   .description("Send a message on the event bus")
-  .action(async (message: string) => {
-    // import { EventBus } from "./bus/event-bus.js";
-    // const bus = new EventBus();
-    // await bus.send(message);
-    console.log(bold(`  Sending: ${message}`));
-    console.log("  (waiting for bus/event-bus.ts integration)");
+  .option("-t, --target <id>", "Target subscriber ID", "*")
+  .action(async (message: string, opts: { target?: string }) => {
+    try {
+      const cwd = process.cwd();
+      const eventBus = new EventBus(cwd);
+      await eventBus.init();
+      const target = opts.target ?? "*";
+      const event = target === "*"
+        ? await eventBus.broadcast("cli", message)
+        : await eventBus.send("cli", target, message);
+      console.log(green(`  Sent (seq=${event.seq}, target=${event.target})`));
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      console.error(red(`  Error: ${msg}`));
+      process.exit(1);
+    }
   });
 
 bus
-  .command("check")
+  .command("check <subscriberId>")
   .description("Check for pending bus messages")
-  .action(async () => {
-    console.log(bold("  Checking bus..."));
-    console.log("  (waiting for bus/event-bus.ts integration)");
+  .action(async (subscriberId: string) => {
+    try {
+      const cwd = process.cwd();
+      const eventBus = new EventBus(cwd);
+      await eventBus.init();
+      const events = await eventBus.check(subscriberId);
+      if (events.length === 0) {
+        console.log("  No pending messages.");
+        return;
+      }
+      console.log(bold(`  Pending messages (${events.length}):\n`));
+      for (const e of events) {
+        console.log(`  [${e.seq}] ${e.publisher} → ${e.target}: ${JSON.stringify(e.data)}`);
+      }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      console.error(red(`  Error: ${msg}`));
+      process.exit(1);
+    }
   });
 
 bus
   .command("status")
   .description("Show event bus status")
   .action(async () => {
-    console.log(bold("  Bus status:"));
-    console.log("  (waiting for bus/event-bus.ts integration)");
+    try {
+      const cwd = process.cwd();
+      const eventBus = new EventBus(cwd);
+      await eventBus.init();
+      const status = await eventBus.status();
+      console.log(bold("  Bus status:"));
+      console.log(`  Workspace:  ${status.id}`);
+      console.log(`  Agents:     ${status.agents}`);
+      console.log(`  Events:     ${status.events}`);
+      if (status.agentList.length > 0) {
+        console.log(bold("\n  Agents:"));
+        for (const a of status.agentList) {
+          console.log(`    ${a.id} [${a.type}] ${a.nickname || ""} — ${a.status}`);
+        }
+      }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      console.error(red(`  Error: ${msg}`));
+      process.exit(1);
+    }
   });
 
 // ── Subcommand: chat ────────────────────────────────
