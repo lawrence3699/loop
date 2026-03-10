@@ -1611,4 +1611,243 @@ echo "Files changed: src/app.ts, src/routes.ts"
 
 ---
 
-*Plan authored for the loop-cli project. Ready for Phase 1 execution upon approval.*
+*Plan authored for the loop-cli project. Phases 1–3 complete.*
+
+---
+
+## Phase 4: Multi-Dimensional Product Analysis, Polish & Release
+
+> **Goal**: Transform the implemented codebase into a production-quality, easily-installable product through systematic multi-dimensional analysis, automated iteration, and proper release engineering.
+
+### 4.1 Agent Team — Comprehensive Product Analysis Prompt
+
+The following English prompt defines a multi-agent team that analyzes the product from every angle a real user would encounter. Each agent specializes in one dimension and produces actionable findings.
+
+```
+PROMPT: Comprehensive Multi-Dimensional Product Analysis Agent Team
+
+You are orchestrating a team of specialized analysis agents to evaluate "loop-cli",
+a TypeScript CLI tool for iterative multi-engine AI orchestration. Each agent must
+simulate a REAL USER perspective — someone who just discovered this tool and wants
+to install, understand, and use it.
+
+═══════════════════════════════════════════════════════════════════
+AGENT 1: First-Time User Experience (FTUE) Analyst
+═══════════════════════════════════════════════════════════════════
+Role: Simulate a developer who just found this tool on GitHub/npm.
+Tasks:
+  1. Read the README — Is it clear what this tool does in 30 seconds?
+  2. Follow installation instructions — Do they work? Any missing steps?
+  3. Run `loop --help` — Is the help text clear, organized, complete?
+  4. Try the guided setup (`loop` with no args) — Is the interactive flow intuitive?
+  5. Attempt a basic loop execution — Does it work out of the box?
+  6. Check error messages — Are they helpful when things go wrong?
+Output: List of friction points, confusing steps, and missing documentation.
+Severity: P0 (blocks usage), P1 (confusing), P2 (minor polish)
+
+═══════════════════════════════════════════════════════════════════
+AGENT 2: Visual & Aesthetic Reviewer
+═══════════════════════════════════════════════════════════════════
+Role: Evaluate all visual elements — terminal UI AND landing page.
+Tasks:
+  Terminal UI:
+    1. Is the ASCII banner attractive and professional?
+    2. Are colors consistent with brand palette (orange/blue/green)?
+    3. Is the blessed dashboard layout clean and readable?
+    4. Does the @clack/prompts flow look polished?
+    5. Is spacing, alignment, and typography consistent?
+    6. Does it look premium/high-end or cheap/amateur?
+  Landing Page (landing/index.html):
+    1. First impression — Does it feel modern, polished, premium?
+    2. Typography — Font sizes, weights, line-heights appropriate?
+    3. Color scheme — Dark theme executed well? Contrast sufficient?
+    4. Responsive design — Mobile, tablet, desktop all good?
+    5. Animations — Smooth, purposeful, not distracting?
+    6. Code blocks — Syntax highlighting readable?
+    7. CTA buttons — Clear, clickable, well-positioned?
+    8. Overall aesthetic — Does it match Apple/Vercel/Linear quality bar?
+Output: Specific visual issues with screenshots/descriptions and fix suggestions.
+Rating: 1-10 for each dimension (target: 8+ across all)
+
+═══════════════════════════════════════════════════════════════════
+AGENT 3: Code Quality & Build Integrity Auditor
+═══════════════════════════════════════════════════════════════════
+Role: Verify the project compiles, tests pass, and code quality is high.
+Tasks:
+  1. Run `npm install` — Any dependency issues?
+  2. Run `npm run build` — Does TypeScript compile cleanly? Any warnings?
+  3. Run `npm test` — All tests passing? Coverage adequate?
+  4. Run `npx tsc --noEmit --strict` — Any type errors?
+  5. Check for unused imports, dead code, TODO/FIXME/HACK comments
+  6. Verify all bin entries work: `loop`, `lclaude`, `lgemini`, `lcodex`
+  7. Check for consistent coding style across all 50+ source files
+  8. Verify error handling — no unhandled promise rejections, proper cleanup
+Output: Build log, test results, list of code quality issues to fix.
+
+═══════════════════════════════════════════════════════════════════
+AGENT 4: Security & Dependency Auditor
+═══════════════════════════════════════════════════════════════════
+Role: Identify security vulnerabilities and risky patterns.
+Tasks:
+  1. Run `npm audit` — Any known vulnerabilities?
+  2. Check for hardcoded secrets, tokens, or credentials
+  3. Review file system operations — path traversal risks?
+  4. Review IPC/socket operations — injection risks?
+  5. Check child process spawning — command injection risks?
+  6. Verify file permissions are appropriate
+  7. Check for sensitive data in git history
+  8. Review .gitignore completeness
+Output: Security findings with severity (Critical/High/Medium/Low)
+
+═══════════════════════════════════════════════════════════════════
+AGENT 5: Documentation & README Reviewer
+═══════════════════════════════════════════════════════════════════
+Role: Ensure documentation is complete, accurate, and helpful.
+Tasks:
+  1. README.md — Exists? Complete? Has install, usage, examples, API?
+  2. --help text for all commands — Consistent format? All options documented?
+  3. SKILL.md files — Well-written? Useful for agents?
+  4. Code comments — Appropriate level? Not over/under-commented?
+  5. CHANGELOG.md — Exists? Follows Keep a Changelog format?
+  6. LICENSE — Exists? Correct?
+  7. Contributing guide — Present if open-source?
+Output: Documentation gaps and suggested content.
+
+═══════════════════════════════════════════════════════════════════
+AGENT 6: Packaging & Distribution Analyst
+═══════════════════════════════════════════════════════════════════
+Role: Ensure the product is easy to install and distribute.
+Tasks:
+  1. `npm pack` — Does it produce a clean tarball?
+  2. Check `files` field in package.json — Only necessary files included?
+  3. Verify `bin` entries point to valid, executable files
+  4. Test `npm install -g` from packed tarball — Works?
+  5. Check package size — Reasonable? No bloat?
+  6. Verify shebang lines (#!/usr/bin/env node) on bin files
+  7. Test on clean Node.js 18+ environment
+  8. GitHub Release asset — tarball downloadable and installable?
+Output: Packaging issues and distribution readiness checklist.
+
+═══════════════════════════════════════════════════════════════════
+ITERATION PROTOCOL
+═══════════════════════════════════════════════════════════════════
+Round 1: All 6 agents analyze independently, produce findings
+Round 2: Fix all P0/Critical issues, re-run affected agents to verify
+Round 3: Fix P1/High issues, polish P2/Medium items
+Round 4: Final verification pass — all agents confirm clean state
+Exit Criteria: All agents report 8+/10 in their dimension, zero P0/P1 issues
+```
+
+### 4.2 Analysis Dimensions Matrix
+
+| Dimension | Agent | Key Metrics | Target |
+|-----------|-------|-------------|--------|
+| User Experience | FTUE Analyst | Time-to-first-success, friction count | < 5 min, 0 blockers |
+| Visual Quality | Aesthetic Reviewer | Design score across 8 sub-dimensions | 8+/10 each |
+| Build Integrity | Code Auditor | Compile: clean, Tests: 100% pass, Coverage: 80%+ | All green |
+| Security | Security Auditor | 0 Critical/High vulns, 0 hardcoded secrets | All clear |
+| Documentation | Doc Reviewer | README complete, --help correct, LICENSE present | All present |
+| Distribution | Packaging Analyst | npm install works, tarball clean, bins executable | All pass |
+
+### 4.3 Automated Iteration Workflow
+
+```
+┌─────────────────────────┐
+│   Round N: Analysis      │
+│   (All 6 agents run)     │
+└──────────┬──────────────┘
+           │
+           ▼
+┌─────────────────────────┐
+│   Triage Findings        │
+│   P0 → P1 → P2          │
+└──────────┬──────────────┘
+           │
+           ▼
+┌─────────────────────────┐
+│   Fix Issues             │
+│   (Code changes)         │
+└──────────┬──────────────┘
+           │
+           ▼
+┌─────────────────────────┐
+│   Re-verify              │
+│   (Affected agents only) │
+└──────────┬──────────────┘
+           │
+           ▼
+    ┌──────┴──────┐
+    │ All clear?  │──No──→ Round N+1
+    └──────┬──────┘
+           │ Yes
+           ▼
+┌─────────────────────────┐
+│   Release Ready          │
+└─────────────────────────┘
+```
+
+### 4.4 Packaging Strategy
+
+1. **npm package**: `npm pack` → `loop-cli-0.1.0.tgz`
+   - Includes: `dist/`, `skills/`, `README.md`, `LICENSE`
+   - Excludes: `src/`, `test/`, `.claude/`, `node_modules/`
+2. **GitHub Release**: Tag `v0.1.0`, attach tarball
+   - Release notes with features, install instructions, changelog
+3. **Install methods**:
+   - `npm install -g loop-cli` (after npm publish)
+   - `npm install -g ./loop-cli-0.1.0.tgz` (from GitHub Release download)
+   - `git clone` + `npm install` + `npm run build` (from source)
+
+### 4.5 GitHub Repository Setup
+
+1. Create public repository on GitHub
+2. Push codebase to `main` branch
+3. Create `v0.1.0` tag and GitHub Release
+4. Attach `loop-cli-0.1.0.tgz` as Release asset
+5. Write Release notes:
+   - Feature highlights
+   - Installation instructions
+   - System requirements
+   - Known limitations
+
+### 4.6 Website Deployment (8.141.95.103)
+
+1. SSH to server, set up nginx/static file serving
+2. Deploy `landing/index.html` as the homepage
+3. Update landing page with:
+   - GitHub repository link
+   - Download/install instructions pointing to GitHub Releases
+   - Version badge
+4. Ensure HTTPS and proper caching headers
+
+### 4.7 Landing Page Updates
+
+The landing page must be updated to include:
+- **GitHub link** in navigation and hero section
+- **Install command** (`npm install -g loop-cli`)
+- **Download button** linking to latest GitHub Release
+- **Version number** badge
+- **Star count** badge (if applicable)
+
+---
+
+### 4.8 Execution Checklist
+
+- [ ] Build compiles with zero errors
+- [ ] All tests pass
+- [ ] README.md is complete and accurate
+- [ ] LICENSE file present (MIT)
+- [ ] CHANGELOG.md present
+- [ ] `npm pack` produces clean tarball
+- [ ] All bin entries are executable
+- [ ] Landing page is visually polished (8+/10)
+- [ ] GitHub repo created and code pushed
+- [ ] GitHub Release v0.1.0 created with tarball
+- [ ] Landing page deployed to 8.141.95.103
+- [ ] Landing page links to GitHub repo
+- [ ] No security vulnerabilities (npm audit clean)
+- [ ] No hardcoded secrets in codebase
+
+---
+
+*Phase 4 added for product polish, multi-dimensional analysis, and release engineering.*

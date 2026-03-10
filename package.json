@@ -45,11 +45,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/nicepkg/loop.git"
+    "url": "https://github.com/lawrence3699/loop.git"
   },
-  "homepage": "https://github.com/nicepkg/loop",
+  "homepage": "https://github.com/lawrence3699/loop",
   "bugs": {
-    "url": "https://github.com/nicepkg/loop/issues"
+    "url": "https://github.com/lawrence3699/loop/issues"
   },
   "dependencies": {
     "@clack/prompts": "^0.10.0",

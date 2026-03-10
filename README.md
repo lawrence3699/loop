@@ -124,7 +124,7 @@ Create `.loop/config.json` in your project:
 ## Install from Source
 
 ```bash
-git clone https://github.com/nicepkg/loop.git
+git clone https://github.com/lawrence3699/loop.git
 cd loop
 npm install
 npm run build
