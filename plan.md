@@ -1851,3 +1851,23 @@ The landing page must be updated to include:
 ---
 
 *Phase 4 added for product polish, multi-dimensional analysis, and release engineering.*
+
+---
+
+## Post-Release Bug Fixes (2026-03-10)
+
+### Bug 1: `npm install -g loop-cli` fails (ENOVERSIONS)
+
+**Symptom**: User runs `npm install -g loop-cli` → npm returns `ENOVERSIONS: No versions available`
+
+**Root Cause**: The package was never published to the npm registry. Only a `.tgz` tarball was attached to the GitHub Release. The landing page, README, and hero install command all advertise `npm install -g loop-cli` as the primary install method, but this command requires the package to exist on npmjs.com.
+
+**Fix**: Run `npm publish` to publish `loop-cli@0.1.0` to the npm registry. The package.json already has correct `name`, `version`, `files`, `bin` fields so it should work directly.
+
+### Bug 2: Website GitHub links don't work
+
+**Symptom**: Clicking "GitHub →" buttons on the landing page doesn't navigate properly.
+
+**Root Cause**: All external links (`<a href="https://github.com/...">`) are missing `target="_blank" rel="noopener noreferrer"`. Clicking these navigates away from the landing page in the same tab. If GitHub is slow to load (especially from China), it appears broken.
+
+**Fix**: Add `target="_blank" rel="noopener noreferrer"` to all external GitHub links in `landing/index.html`.
