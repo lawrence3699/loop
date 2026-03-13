@@ -25,7 +25,7 @@ import { fileURLToPath } from "node:url";
 const program = new Command();
 
 program
-  .name("loop")
+  .name("iter-loop")
   .description("Iterative multi-engine AI orchestration CLI — Claude, Gemini, Codex")
   .version("0.2.1")
   .argument("[task]", "Task description (omit to enter interactive mode)")

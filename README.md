@@ -1,11 +1,11 @@
-# loop
+# iter-loop
 
 > Iterative Multi-Engine AI Orchestration CLI
 
 Combine **Claude**, **Gemini**, and **Codex** in a quality-scored iteration loop. One engine executes, another reviews. Repeat until perfect.
 
 ```bash
-npm install -g @lawrence369/loop-cli
+npm install -g @lawrence369/iter-loop
 ```
 
 ## What It Does
@@ -29,16 +29,16 @@ You give it a task. The **executor** engine produces output. The **reviewer** en
 
 ```bash
 # Interactive guided setup
-loop
+iter-loop
 
 # Direct execution
-loop "Refactor the auth module to use JWT" -e claude -r gemini
+iter-loop "Refactor the auth module to use JWT" -e claude -r gemini
 
 # Auto mode with custom threshold
-loop "Write comprehensive tests for utils/" -e gemini -r claude --auto --threshold 9
+iter-loop "Write comprehensive tests for utils/" -e gemini -r claude --auto --threshold 9
 
 # Pass flags to the executor CLI
-loop "Build the API endpoints" -e claude --pass --model opus
+iter-loop "Build the API endpoints" -e claude --pass --model opus
 ```
 
 ## Features
@@ -56,21 +56,21 @@ loop "Build the API endpoints" -e claude --pass --model opus
 ## Commands
 
 ```bash
-loop [task]              # Run iteration loop (interactive if no task)
-loop daemon start        # Start background daemon
-loop daemon stop         # Stop daemon
-loop daemon status       # Check daemon status
-loop bus send <message>  # Send a message on the event bus
-loop bus check <id>      # Check for pending bus messages
-loop bus status          # Show event bus status
-loop chat                # Open real-time dashboard
-loop plan show           # Show current iteration plan
-loop plan clear          # Clear plan
-loop ctx add <title>     # Add architectural decision
-loop ctx list            # List decisions
-loop ctx resolve <id>    # Resolve a decision
-loop skills list         # List available skills
-loop skills add <name>   # Add a new skill
+iter-loop [task]              # Run iteration loop (interactive if no task)
+iter-loop daemon start        # Start background daemon
+iter-loop daemon stop         # Stop daemon
+iter-loop daemon status       # Check daemon status
+iter-loop bus send <message>  # Send a message on the event bus
+iter-loop bus check <id>      # Check for pending bus messages
+iter-loop bus status          # Show event bus status
+iter-loop chat                # Open real-time dashboard
+iter-loop plan show           # Show current iteration plan
+iter-loop plan clear          # Clear plan
+iter-loop ctx add <title>     # Add architectural decision
+iter-loop ctx list            # List decisions
+iter-loop ctx resolve <id>    # Resolve a decision
+iter-loop skills list         # List available skills
+iter-loop skills add <name>   # Add a new skill
 ```
 
 ## Options
@@ -129,29 +129,29 @@ Create `.loop/config.json` in your project:
 ## Install from Source
 
 ```bash
-git clone https://github.com/lawrence3699/loop.git
-cd loop
+git clone https://github.com/lawrence3699/iter-loop.git
+cd iter-loop
 npm install
 npm run build
 npm pack
-npm install -g ./lawrence369-loop-cli-*.tgz
+npm install -g ./lawrence369-iter-loop-*.tgz
 ```
 
 ## Validate A Local Global Install
 
 Use the packed tarball when verifying runtime fixes so the globally installed
-`loop` binary is exercising the same build you just produced.
+`iter-loop` binary is exercising the same build you just produced.
 
 ```bash
 npm run build
 npm test
 npm pack
-npm install -g ./lawrence369-loop-cli-*.tgz
+npm install -g ./lawrence369-iter-loop-*.tgz
 
 cd ~
-loop "Reply with exactly the single word OK" -e codex -r codex --auto --threshold 9
-loop "Reply with exactly the single word OK" -e claude -r codex --auto --threshold 9
-loop "Reply with exactly the single word OK" -e gemini -r codex --auto --threshold 9
+iter-loop "Reply with exactly the single word OK" -e codex -r codex --auto --threshold 9
+iter-loop "Reply with exactly the single word OK" -e claude -r codex --auto --threshold 9
+iter-loop "Reply with exactly the single word OK" -e gemini -r codex --auto --threshold 9
 ```
 
 ## License

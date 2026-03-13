@@ -1,7 +1,7 @@
 /**
  * Engine abstraction — unified interface for Claude, Gemini, and Codex CLIs.
  *
- * Ported from iterloop's engine.ts with adaptations for loop-cli:
+ * Ported from iterloop's engine.ts with adaptations for iter-loop:
  * - Brand `color` property on each engine
  * - Timeout parameter on RunOptions
  * - ESM imports with .js extensions

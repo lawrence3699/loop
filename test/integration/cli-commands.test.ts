@@ -20,7 +20,7 @@ describe("CLI Commands (integration)", () => {
   let tmpDir: string;
 
   beforeEach(() => {
-    tmpDir = mkdtempSync(join(tmpdir(), "loop-cli-integ-"));
+    tmpDir = mkdtempSync(join(tmpdir(), "iter-loop-integ-"));
   });
 
   afterEach(() => {

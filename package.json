@@ -1,12 +1,12 @@
 {
-  "name": "@lawrence369/loop-cli",
+  "name": "@lawrence369/iter-loop",
   "version": "0.2.1",
   "description": "Iterative Multi-Engine AI Orchestration",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {
-    "loop": "./dist/index.js",
+    "iter-loop": "./dist/index.js",
     "lclaude": "./dist/bin/lclaude.js",
     "lgemini": "./dist/bin/lgemini.js",
     "lcodex": "./dist/bin/lcodex.js"
@@ -41,15 +41,15 @@
     "iteration",
     "loop"
   ],
-  "author": "loop-cli contributors",
+  "author": "iter-loop contributors",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lawrence3699/loop.git"
+    "url": "git+https://github.com/lawrence3699/iter-loop.git"
   },
-  "homepage": "https://github.com/lawrence3699/loop",
+  "homepage": "https://github.com/lawrence3699/iter-loop",
   "bugs": {
-    "url": "https://github.com/lawrence3699/loop/issues"
+    "url": "https://github.com/lawrence3699/iter-loop/issues"
   },
   "dependencies": {
     "@clack/prompts": "^0.10.0",

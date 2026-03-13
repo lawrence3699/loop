@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>loop — Iterative Multi-Engine AI Orchestration</title>
+  <title>iter-loop — Iterative Multi-Engine AI Orchestration</title>
   <meta name="description" content="Combine Claude, Gemini, and Codex in a quality-scored iteration loop. File-based event bus. Multi-agent orchestration. Zero external dependencies.">
-  <meta property="og:title" content="loop — Iterative Multi-Engine AI Orchestration">
+  <meta property="og:title" content="iter-loop — Iterative Multi-Engine AI Orchestration">
   <meta property="og:description" content="Combine Claude, Gemini, and Codex in quality-scored iteration loops. File-based event bus. Multi-agent orchestration.">
-  <meta property="og:url" content="https://github.com/lawrence3699/loop">
+  <meta property="og:url" content="https://github.com/lawrence3699/iter-loop">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="https://opengraph.githubassets.com/1/lawrence3699/loop">
+  <meta property="og:image" content="https://opengraph.githubassets.com/1/lawrence3699/iter-loop">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="loop — Iterative Multi-Engine AI Orchestration">
+  <meta name="twitter:title" content="iter-loop — Iterative Multi-Engine AI Orchestration">
   <meta name="twitter:description" content="Combine Claude, Gemini, and Codex in quality-scored iteration loops.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,7 +19,7 @@
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1F504;</text></svg>">
   <style>
     /* ============================================
-       loop-cli Landing Page
+       iter-loop Landing Page
        Terminal/Hacker Aesthetic — Dark Theme
        ============================================ */
 
@@ -799,7 +799,7 @@
     <div class="header-content">
       <a href="#" class="logo">
         <span class="logo-icon">&infin;</span>
-        <span class="logo-text">LOOP</span>
+        <span class="logo-text">ITER-LOOP</span>
       </a>
       <button class="nav-toggle" id="navToggle" aria-label="Menu">&#9776;</button>
       <nav class="nav" id="mainNav">
@@ -807,7 +807,7 @@
         <a href="#features" class="nav-link">Features</a>
         <a href="#quick-start" class="nav-link">Quick Start</a>
         <a href="#architecture" class="nav-link">Architecture</a>
-        <a href="https://github.com/lawrence3699/loop" class="nav-cta" target="_blank" rel="noopener noreferrer">GitHub &rarr;</a>
+        <a href="https://github.com/lawrence3699/iter-loop" class="nav-cta" target="_blank" rel="noopener noreferrer">GitHub &rarr;</a>
       </nav>
     </div>
   </header>
@@ -819,10 +819,10 @@
     <div class="hero-inner">
       <div class="hero-badge">
         <span class="hero-badge-dot"></span>
-        <span>v0.1.0 // Claude + Gemini + Codex</span>
+        <span>v0.2.1 // Claude + Gemini + Codex</span>
       </div>
 
-      <h1 class="hero-title gradient-text">loop</h1>
+      <h1 class="hero-title gradient-text">iter-loop</h1>
 
       <p class="hero-tagline">Iterative Multi-Engine AI Orchestration</p>
 
@@ -833,13 +833,13 @@
 
       <div class="hero-install" id="installBox" title="Click to copy">
         <span class="prompt">$</span>
-        <span class="cmd-text">npm install -g @lawrence369/loop-cli</span>
+        <span class="cmd-text">npm install -g @lawrence369/iter-loop</span>
         <span class="cursor-blink"></span>
         <span class="copy-hint">click to copy</span>
       </div>
 
       <div class="hero-cta">
-        <a href="https://github.com/lawrence3699/loop" class="btn btn-primary" target="_blank" rel="noopener noreferrer">View on GitHub &rarr;</a>
+        <a href="https://github.com/lawrence3699/iter-loop" class="btn btn-primary" target="_blank" rel="noopener noreferrer">View on GitHub &rarr;</a>
         <a href="#quick-start" class="btn btn-secondary">Quick Start</a>
       </div>
     </div>
@@ -979,26 +979,26 @@
           <span class="dot yellow"></span>
           <span class="dot green"></span>
         </div>
-        <span class="terminal-title">loop &mdash; zsh</span>
+        <span class="terminal-title">iter-loop &mdash; zsh</span>
       </div>
       <div class="terminal-body">
         <pre><span class="comment"># Install</span>
-<span class="prompt-sign">$</span> <span class="cmd">npm install -g @lawrence369/loop-cli</span>
+<span class="prompt-sign">$</span> <span class="cmd">npm install -g @lawrence369/iter-loop</span>
 
 <span class="comment"># Interactive mode</span>
-<span class="prompt-sign">$</span> <span class="cmd">loop</span>
+<span class="prompt-sign">$</span> <span class="cmd">iter-loop</span>
 
 <span class="comment"># Direct execution</span>
-<span class="prompt-sign">$</span> <span class="cmd">loop</span> <span class="string">"Build a REST API with Express"</span> <span class="flag">--executor</span> <span class="arg">claude</span> <span class="flag">--reviewer</span> <span class="arg">gemini</span>
+<span class="prompt-sign">$</span> <span class="cmd">iter-loop</span> <span class="string">"Build a REST API with Express"</span> <span class="flag">--executor</span> <span class="arg">claude</span> <span class="flag">--reviewer</span> <span class="arg">gemini</span>
 
 <span class="comment"># Agent wrappers</span>
 <span class="prompt-sign">$</span> <span class="cmd">lclaude</span>    <span class="comment"># Claude in loop mode</span>
 <span class="prompt-sign">$</span> <span class="cmd">lgemini</span>    <span class="comment"># Gemini in loop mode</span>
 
 <span class="comment"># Management</span>
-<span class="prompt-sign">$</span> <span class="cmd">loop daemon start</span>
-<span class="prompt-sign">$</span> <span class="cmd">loop bus status</span>
-<span class="prompt-sign">$</span> <span class="cmd">loop chat</span></pre>
+<span class="prompt-sign">$</span> <span class="cmd">iter-loop daemon start</span>
+<span class="prompt-sign">$</span> <span class="cmd">iter-loop bus status</span>
+<span class="prompt-sign">$</span> <span class="cmd">iter-loop chat</span></pre>
       </div>
     </div>
   </section>
@@ -1044,7 +1044,7 @@
   <section class="section section-alt" id="comparison">
     <div class="section-header fade-in">
       <span class="section-label">Comparison</span>
-      <h2>Why loop?</h2>
+      <h2>Why iter-loop?</h2>
     </div>
 
     <div class="comparison-table-wrap fade-in">
@@ -1053,7 +1053,7 @@
           <tr>
             <th>Feature</th>
             <th>Individual CLIs</th>
-            <th>loop-cli</th>
+            <th>iter-loop</th>
           </tr>
         </thead>
         <tbody>
@@ -1095,23 +1095,23 @@
       <div class="footer-brand">
         <a href="#" class="logo">
           <span class="logo-icon">&infin;</span>
-          <span class="logo-text">LOOP</span>
+          <span class="logo-text">ITER-LOOP</span>
         </a>
       </div>
 
       <div class="footer-links">
-        <a href="https://github.com/lawrence3699/loop" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://github.com/lawrence3699/iter-loop" target="_blank" rel="noopener noreferrer">GitHub</a>
         <span class="sep">|</span>
-        <span>v0.1.0</span>
+        <span>v0.2.1</span>
         <span class="sep">|</span>
         <span>MIT License</span>
         <span class="sep">|</span>
-        <span>Built with loop-cli</span>
+        <span>Built with iter-loop</span>
       </div>
     </div>
 
     <div class="footer-bottom-text">
-      &copy; 2026 loop-cli // Iterative Multi-Engine AI Orchestration
+      &copy; 2026 iter-loop // Iterative Multi-Engine AI Orchestration
     </div>
   </footer>
 
@@ -1132,7 +1132,7 @@
 
     // Copy install command
     document.getElementById('installBox').addEventListener('click', function() {
-      navigator.clipboard.writeText('npm install -g @lawrence369/loop-cli').then(() => {
+      navigator.clipboard.writeText('npm install -g @lawrence369/iter-loop').then(() => {
         const hint = this.querySelector('.copy-hint');
         this.classList.add('copied');
         hint.textContent = 'copied!';
